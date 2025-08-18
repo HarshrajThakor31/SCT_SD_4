@@ -353,41 +353,110 @@ public class TemperatureConverter extends JFrame {
                 int height = getHeight();
                 int centerX = width / 2;
                 
-                // Draw thermometer outline
-                g2d.setColor(Color.LIGHT_GRAY);
-                g2d.fillRect(centerX - 8, 30, 16, height - 80);
-                g2d.fillOval(centerX - 12, height - 60, 24, 24);
+                // Realistic thermometer dimensions
+                int tubeWidth = 12;
+                int tubeTop = 40;
+                int tubeBottom = height - 50;
+                int bulbRadius = 18;
+                int bulbCenterY = height - 32;
                 
-                // Calculate temperature level
+                // Glass tube outer shell
+                g2d.setColor(new Color(240, 240, 240));
+                g2d.fillRoundRect(centerX - tubeWidth/2 - 2, tubeTop - 5, tubeWidth + 4, tubeBottom - tubeTop + 10, 8, 8);
+                
+                // Glass tube inner chamber
+                g2d.setColor(Color.WHITE);
+                g2d.fillRoundRect(centerX - tubeWidth/2, tubeTop, tubeWidth, tubeBottom - tubeTop, 6, 6);
+                
+                // Glass bulb outer
+                g2d.setColor(new Color(240, 240, 240));
+                g2d.fillOval(centerX - bulbRadius - 2, bulbCenterY - bulbRadius - 2, (bulbRadius + 2) * 2, (bulbRadius + 2) * 2);
+                
+                // Glass bulb inner
+                g2d.setColor(Color.WHITE);
+                g2d.fillOval(centerX - bulbRadius, bulbCenterY - bulbRadius, bulbRadius * 2, bulbRadius * 2);
+                
+                // Calculate mercury level
                 double normalizedTemp = Math.max(0, Math.min(1, (celsius + 50) / 200));
-                int tempHeight = (int) ((height - 110) * normalizedTemp);
+                int mercuryHeight = (int) ((tubeBottom - tubeTop - 10) * normalizedTemp);
                 
-                // Color based on temperature
-                Color tempColor;
-                if (celsius < 0) tempColor = Color.BLUE;
-                else if (celsius < 30) tempColor = Color.GREEN;
-                else if (celsius < 60) tempColor = Color.ORANGE;
-                else tempColor = Color.RED;
+                // Mercury color based on temperature
+                Color mercuryColor;
+                if (celsius < 0) mercuryColor = new Color(0, 100, 255);      // Blue for freezing
+                else if (celsius < 20) mercuryColor = new Color(0, 150, 255); // Light blue for cold
+                else if (celsius < 35) mercuryColor = new Color(0, 200, 100); // Green for normal
+                else if (celsius < 60) mercuryColor = new Color(255, 150, 0); // Orange for warm
+                else mercuryColor = new Color(255, 50, 50);                   // Red for hot
                 
-                // Fill temperature level
-                g2d.setColor(tempColor);
-                g2d.fillRect(centerX - 6, height - 50 - tempHeight, 12, tempHeight);
-                g2d.fillOval(centerX - 10, height - 58, 20, 20);
+                // Mercury bulb (always filled)
+                g2d.setColor(mercuryColor);
+                g2d.fillOval(centerX - bulbRadius + 3, bulbCenterY - bulbRadius + 3, (bulbRadius - 3) * 2, (bulbRadius - 3) * 2);
                 
-                // Draw scale marks
-                g2d.setColor(Color.BLACK);
-                g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
-                for (int i = 0; i <= 4; i++) {
-                    int y = 30 + i * (height - 110) / 4;
-                    g2d.drawLine(centerX + 10, y, centerX + 15, y);
-                    int scaleTemp = 150 - i * 50;
-                    g2d.drawString(scaleTemp + "°", centerX + 18, y + 3);
+                // Mercury column
+                if (mercuryHeight > 0) {
+                    g2d.fillRoundRect(centerX - tubeWidth/2 + 2, tubeBottom - mercuryHeight, tubeWidth - 4, mercuryHeight, 3, 3);
                 }
                 
-                // Current temperature
-                DecimalFormat df = new DecimalFormat("0.0");
+                // Glass reflection effect
+                GradientPaint glassReflection = new GradientPaint(
+                    centerX - tubeWidth/2, 0, new Color(255, 255, 255, 100),
+                    centerX - tubeWidth/2 + 4, 0, new Color(255, 255, 255, 0)
+                );
+                g2d.setPaint(glassReflection);
+                g2d.fillRoundRect(centerX - tubeWidth/2, tubeTop, 4, tubeBottom - tubeTop, 3, 3);
+                
+                // Bulb reflection
+                g2d.setColor(new Color(255, 255, 255, 80));
+                g2d.fillOval(centerX - bulbRadius + 4, bulbCenterY - bulbRadius + 4, 8, 8);
+                
+                // Temperature scale markings
                 g2d.setColor(Color.BLACK);
-                g2d.drawString(df.format(celsius) + "°C", centerX - 20, 20);
+                g2d.setFont(new Font("Arial", Font.PLAIN, 9));
+                
+                for (int i = 0; i <= 10; i++) {
+                    int y = tubeTop + i * (tubeBottom - tubeTop) / 10;
+                    int scaleTemp = 150 - i * 20;
+                    
+                    // Major tick marks
+                    if (i % 2 == 0) {
+                        g2d.setStroke(new BasicStroke(1.5f));
+                        g2d.drawLine(centerX + tubeWidth/2 + 2, y, centerX + tubeWidth/2 + 8, y);
+                        g2d.drawString(scaleTemp + "°", centerX + tubeWidth/2 + 12, y + 3);
+                    } else {
+                        // Minor tick marks
+                        g2d.setStroke(new BasicStroke(1f));
+                        g2d.drawLine(centerX + tubeWidth/2 + 2, y, centerX + tubeWidth/2 + 6, y);
+                    }
+                }
+                
+                // Current temperature indicator
+                if (mercuryHeight > 0) {
+                    int indicatorY = tubeBottom - mercuryHeight;
+                    g2d.setColor(Color.RED);
+                    g2d.setStroke(new BasicStroke(2f));
+                    g2d.drawLine(centerX - tubeWidth/2 - 5, indicatorY, centerX - tubeWidth/2 - 2, indicatorY);
+                    
+                    // Temperature value
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    String tempText = df.format(celsius) + "°C";
+                    g2d.setFont(new Font("Arial", Font.BOLD, 11));
+                    g2d.setColor(Color.BLACK);
+                    g2d.drawString(tempText, centerX - tubeWidth/2 - 35, indicatorY + 4);
+                }
+                
+                // Thermometer cap
+                g2d.setColor(new Color(200, 200, 200));
+                g2d.fillRoundRect(centerX - tubeWidth/2 - 1, tubeTop - 8, tubeWidth + 2, 8, 4, 4);
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.drawRoundRect(centerX - tubeWidth/2 - 1, tubeTop - 8, tubeWidth + 2, 8, 4, 4);
+                
+                // Scale label
+                g2d.setFont(new Font("Arial", Font.BOLD, 10));
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.drawString("Celsius", centerX + tubeWidth/2 + 12, tubeTop + 15);
+                
+                // Reset stroke
+                g2d.setStroke(new BasicStroke(1));
             }
         } catch (NumberFormatException ex) {
             // Don't draw if invalid input
