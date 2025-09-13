@@ -1,56 +1,61 @@
-# SCT_SD_1 - Temperature Converter
+# SCT_SD_Task2 - Number Guessing Game
 
-**Software Development Internship - Task 1**
+A professional number guessing game with both desktop (Java) and web versions.
 
-A Java desktop application for temperature conversion between multiple scales with real-time updates and visual feedback.
+## 🎯 Features
 
-## Features
+- **Desktop Version**: Java Swing GUI application
+- **Web Version**: HTML/CSS/JavaScript online game
+- **Multiple Difficulty Levels**: Easy (1-50), Medium (1-100), Hard (1-200)
+- **Progress Tracking**: Visual progress bar and attempt counter
+- **Responsive Design**: Clean, modern interface
+- **Cross-Platform**: Works on Windows, Mac, Linux
 
-- Convert between 5 temperature scales (Celsius, Fahrenheit, Kelvin, Rankine, Réaumur)
-- Real-time conversion as you type
-- Visual thermometer with color-coded temperature display
-- Conversion history tracking
-- Favorites system for commonly used temperatures
-- Dark/light theme toggle
-- Keyboard shortcuts (Enter, Escape, Ctrl+R)
-- Temperature validation with warnings
+## 🚀 How to Play
 
-## How to Run
+### Desktop Version
+1. Compile: `javac CleanGuessingGame.java`
+2. Run: `java CleanGuessingGame`
 
-```bash
-# Compile
-javac src/TemperatureConverter.java
+### Web Version
+1. Open `index.html` in any web browser
+2. Click "Play Online" to start
 
-# Run
-java -cp src TemperatureConverter
+## 📁 Project Structure
+
+```
+SCT_SD_Task2/
+├── CleanGuessingGame.java    # Main Java application
+├── index.html                # Web version & landing page
+├── create_jar.bat           # JAR creation script
+└── README.md                # Project documentation
 ```
 
-Requirements: Java 8 or higher
+## 🛠️ Requirements
 
-## Usage
+- **Desktop**: Java Runtime Environment (JRE) 8+
+- **Web**: Any modern web browser
 
-1. Enter temperature in the input field
-2. Select input and output scales from dropdowns
-3. View real-time conversion results
-4. Use slider for quick temperature input
-5. Access history and favorites in side tabs
+## 🎮 Game Rules
 
-## Technical Implementation
+1. Choose your difficulty level
+2. Guess the randomly generated number
+3. Get hints: "Too high" or "Too low"
+4. Try to guess in minimum attempts
+5. Track your progress with the visual indicator
 
-- **Language**: Java
+## 📊 Technical Details
+
+- **Language**: Java (Desktop), HTML/CSS/JavaScript (Web)
 - **GUI Framework**: Java Swing
-- **Graphics**: Java 2D API for thermometer visualization
-- **Architecture**: Event-driven programming with MVC pattern
-- **Features**: Real-time updates, custom graphics, error handling
+- **Design**: Clean, professional interface
+- **Responsive**: Resizable window support
 
-## What I Learned
+## 🏆 Internship Project
 
-- Java Swing GUI development
-- Event handling and real-time updates
-- Custom graphics programming
-- User experience design
-- Code organization and documentation
+**Track**: Software Development (SD)  
+**Task**: 02  
+**Repository**: SCT_SD_Task2
 
-## License
-
-MIT License
+---
+Made with ❤️ for SkillCraft Technology

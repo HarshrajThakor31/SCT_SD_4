@@ -1,0 +1,26 @@
+# Compiled Java files
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Game data files
+game_stats.properties
+leaderboard.txt
+achievements.txt
+manifest.txt
+
+# Temporary files
+*.tmp
+*.temp
