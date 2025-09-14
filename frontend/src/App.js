@@ -1,166 +1,113 @@
-import React, { useState } from 'react';
-import { Puzzle, BarChart3, Info } from 'lucide-react';
-import SudokuSolver from './components/SudokuSolver';
-import Statistics from './components/Statistics';
-import './styles/index.css';
+import React, { useState, useEffect } from 'react';
+import Dashboard from './components/Dashboard';
+import ScrapingForm from './components/ScrapingForm';
+import ProductTable from './components/ProductTable';
+import Login from './components/Login';
 
-const App = () => {
-  const [activeTab, setActiveTab] = useState('solver');
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [selectedJobId, setSelectedJobId] = useState(null);
 
-  const Header = () => (
-    <header className="header">
-      <div className="logo">
-        <Puzzle size={24} style={{ marginRight: '0.5rem' }} />
-        Sudoku Solver Pro
-      </div>
-      <nav className="nav">
-        <button
-          className={`nav-button ${activeTab === 'solver' ? 'active' : ''}`}
-          onClick={() => setActiveTab('solver')}
-        >
-          <Puzzle size={16} />
-          Solver
-        </button>
-        <button
-          className={`nav-button ${activeTab === 'statistics' ? 'active' : ''}`}
-          onClick={() => setActiveTab('statistics')}
-        >
-          <BarChart3 size={16} />
-          Statistics
-        </button>
-        <button
-          className={`nav-button ${activeTab === 'about' ? 'active' : ''}`}
-          onClick={() => setActiveTab('about')}
-        >
-          <Info size={16} />
-          About
-        </button>
-      </nav>
-    </header>
-  );
-
-  const About = () => (
-    <div className="sudoku-container">
-      <h2>About Sudoku Solver Pro</h2>
-      <div style={{ lineHeight: '1.6', color: '#666' }}>
-        <p>
-          <strong>Sudoku Solver Pro</strong> is a comprehensive web application that can solve any Sudoku puzzle 
-          using advanced algorithms. Built with modern technologies for optimal performance and user experience.
-        </p>
-        
-        <div style={{ 
-          background: '#f8f9fa', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          margin: '2rem 0',
-          textAlign: 'center',
-          border: '2px solid #667eea'
-        }}>
-          <h3 style={{ color: '#667eea', marginBottom: '1rem' }}>🖥️ Desktop Application Available!</h3>
-          <p style={{ marginBottom: '1rem' }}>Download our Java desktop application for offline use with enhanced features.</p>
-          <a 
-            href="/SudokuSolverDesktop.jar" 
-            download="SudokuSolverDesktop.jar"
-            style={{
-              display: 'inline-block',
-              background: '#667eea',
-              color: 'white',
-              padding: '12px 24px',
-              borderRadius: '6px',
-              textDecoration: 'none',
-              fontWeight: 'bold',
-              margin: '0 10px'
-            }}
-          >
-            📥 Download Desktop App
-          </a>
-          <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#666' }}>
-            <p><strong>Requirements:</strong> Java 8 or higher</p>
-            <p><strong>How to run:</strong> Double-click the JAR file or run: <code>java -jar SudokuSolverDesktop.jar</code></p>
-          </div>
-        </div>
-        
-        <h3 style={{ marginTop: '2rem', color: '#333' }}>Features</h3>
-        <ul style={{ marginLeft: '1.5rem' }}>
-          <li>🧩 <strong>Multiple Solving Algorithms:</strong> Backtracking and Constraint Propagation</li>
-          <li>🎯 <strong>Puzzle Generation:</strong> Create puzzles with 4 difficulty levels</li>
-          <li>👁️ <strong>Solution Visualization:</strong> Watch the algorithm solve step-by-step</li>
-          <li>✅ <strong>Puzzle Validation:</strong> Verify if your puzzle is valid</li>
-          <li>📊 <strong>Statistics Dashboard:</strong> Track your solving performance</li>
-          <li>💾 <strong>Import/Export:</strong> Save and load puzzles</li>
-          <li>📱 <strong>Responsive Design:</strong> Works on all devices</li>
-        </ul>
-
-        <h3 style={{ marginTop: '2rem', color: '#333' }}>How to Use</h3>
-        <ol style={{ marginLeft: '1.5rem' }}>
-          <li>Generate a new puzzle or input your own</li>
-          <li>Choose your preferred solving algorithm</li>
-          <li>Enable visualization to see the solving process</li>
-          <li>Click "Solve" to get the solution instantly</li>
-          <li>View statistics to track your progress</li>
-        </ol>
-
-        <h3 style={{ marginTop: '2rem', color: '#333' }}>Technology Stack</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-          <div>
-            <h4>Backend</h4>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>☕ Java 17</li>
-              <li>🍃 Spring Boot 3.2</li>
-              <li>🗄️ H2 Database</li>
-              <li>🔧 Maven</li>
-            </ul>
-          </div>
-          <div>
-            <h4>Frontend</h4>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li>⚛️ React 18</li>
-              <li>📊 Recharts</li>
-              <li>🎨 CSS3</li>
-              <li>🔥 React Hot Toast</li>
-            </ul>
-          </div>
-        </div>
-
-        <div style={{ 
-          background: '#f8f9fa', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          marginTop: '2rem',
-          textAlign: 'center'
-        }}>
-          <p style={{ margin: 0, fontWeight: '500' }}>
-            Built with ❤️ for Sudoku enthusiasts and algorithm lovers
-          </p>
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#666' }}>
-            Available as Web App and Desktop Application
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'solver':
-        return <SudokuSolver />;
-      case 'statistics':
-        return <Statistics />;
-      case 'about':
-        return <About />;
-      default:
-        return <SudokuSolver />;
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Basic token validation
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp * 1000 > Date.now()) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('token');
+        }
+      }
+    } catch (error) {
+      localStorage.removeItem('token');
+      setIsAuthenticated(false);
     }
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
+
+  const handleJobCreated = (job) => {
+    setSelectedJobId(job.id);
+    setActiveTab('products');
+  };
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
-    <div className="app">
-      <Header />
-      <main className="main-content">
-        {renderContent()}
+    <div className="min-h-screen bg-gray-100">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <h1 className="text-xl font-bold text-gray-900">E-commerce Scraper</h1>
+              </div>
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`${
+                    activeTab === 'dashboard'
+                      ? 'border-indigo-500 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                >
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => setActiveTab('scraping')}
+                  className={`${
+                    activeTab === 'scraping'
+                      ? 'border-indigo-500 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                >
+                  New Job
+                </button>
+                <button
+                  onClick={() => setActiveTab('products')}
+                  className={`${
+                    activeTab === 'products'
+                      ? 'border-indigo-500 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                >
+                  Products
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {activeTab === 'dashboard' && <Dashboard />}
+        {activeTab === 'scraping' && <ScrapingForm onJobCreated={handleJobCreated} />}
+        {activeTab === 'products' && <ProductTable jobId={selectedJobId} />}
       </main>
     </div>
   );
-};
+}
 
 export default App;

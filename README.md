@@ -1,65 +1,45 @@
-# Sudoku Solver Pro 🧩
+# E-commerce Product Scraper (Java Spring Boot)
 
-**GitHub Repository:** https://github.com/HarshrajThakor31/SCT_SD_3.git
+A full-stack web application for scraping product information from e-commerce websites with a modern React frontend and Java Spring Boot backend.
 
-A comprehensive, market-ready Sudoku solver application with a professional web dashboard and powerful Java backend. Solve any Sudoku puzzle instantly using advanced algorithms with real-time visualization.
-
-## 🚀 Features
+## Features
 
 ### Core Functionality
-- **Multiple Solving Algorithms**: Backtracking and Constraint Propagation
-- **Puzzle Generation**: Create puzzles with 4 difficulty levels (Easy, Medium, Hard, Expert)
-- **Real-time Validation**: Instant puzzle validation
-- **Solution Visualization**: Watch algorithms solve step-by-step
-- **Import/Export**: Save and load puzzles in JSON format
+- **Multi-site Scraping**: Support for Amazon, eBay, and extensible to other sites
+- **Product Data Extraction**: Names, prices, ratings, reviews, images, URLs
+- **Structured Data Storage**: H2 database with JPA/Hibernate
+- **Multiple Export Formats**: CSV, JSON, Excel
 
-### Professional Dashboard
-- **Interactive Grid**: Responsive Sudoku grid with smart input validation
-- **Statistics Dashboard**: Comprehensive analytics with charts and metrics
-- **Puzzle History**: Track all solved puzzles with performance metrics
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
-- **Modern UI**: Clean, professional interface with smooth animations
+### User Management
+- **Authentication**: JWT-based login/registration system
+- **User Isolation**: Each user's data is separate and secure
+- **Session Management**: Secure token-based authentication
 
-### Backend API
-- **RESTful API**: Complete REST endpoints for all operations
-- **Database Integration**: Persistent storage with H2 database
-- **Performance Tracking**: Detailed solve time and algorithm metrics
-- **CORS Support**: Ready for production deployment
+### Dashboard & Analytics
+- **Real-time Dashboard**: Job statistics and progress tracking
+- **Data Visualization**: Charts showing scraping results
+- **Job Management**: Create, monitor, and manage scraping jobs
 
-## 🛠️ Technology Stack
+### Production Features
+- **Rate Limiting**: Respectful scraping with delays
+- **Error Handling**: Comprehensive error management
+- **Background Processing**: Async job execution
+- **Containerization**: Docker support for easy deployment
 
-### Backend
-- **Java 17** - Modern Java features and performance
-- **Spring Boot 3.2** - Enterprise-grade framework
-- **Spring Data JPA** - Database abstraction layer
-- **H2 Database** - In-memory database for development
-- **Maven** - Dependency management and build tool
-
-### Frontend
-- **React 18** - Modern React with hooks and functional components
-- **Recharts** - Beautiful, responsive charts for statistics
-- **Lucide React** - Modern icon library
-- **React Hot Toast** - Elegant notification system
-- **CSS3** - Custom styling with modern CSS features
-
-## 📦 Installation & Setup
+## Quick Start
 
 ### Prerequisites
-- Java 17 or higher
-- Node.js 16 or higher
-- Maven 3.6 or higher
+- Java 17+
+- Maven 3.6+
+- Node.js 16+
+- Chrome browser (for Selenium)
 
 ### Backend Setup
 ```bash
-# Navigate to project root
-cd skillcraft
-
-# Install dependencies and run
+# Build and run the Java application
 mvn clean install
 mvn spring-boot:run
 ```
-
-The backend will start on `http://localhost:8080`
 
 ### Frontend Setup
 ```bash
@@ -73,111 +53,156 @@ npm install
 npm start
 ```
 
-The frontend will start on `http://localhost:3000`
-
-## 🔧 API Endpoints
-
-### Puzzle Operations
-- `POST /api/sudoku/solve` - Solve a Sudoku puzzle
-- `GET /api/sudoku/generate?difficulty=MEDIUM` - Generate new puzzle
-- `GET /api/sudoku/validate?grid=...` - Validate puzzle
-
-### Analytics
-- `GET /api/sudoku/statistics` - Get solving statistics
-- `GET /api/sudoku/history?limit=10` - Get puzzle history
-
-## 📊 Usage Examples
-
-### Solving a Puzzle
-```javascript
-// Frontend API call
-const response = await sudokuAPI.solvePuzzle(
-  "53..7....6..195....98....6.8...6...34..8.3..17...2...6.6....28....419..5....8..79",
-  "BACKTRACKING",
-  true // Enable visualization
-);
-```
-
-### Generating a Puzzle
-```javascript
-const puzzle = await sudokuAPI.generatePuzzle("HARD");
-console.log(puzzle.puzzle); // Generated puzzle string
-```
-
-## 🎯 Market-Ready Features
-
-### For End Users
-- **Instant Solving**: Solve any valid Sudoku puzzle in milliseconds
-- **Learning Tool**: Visualization helps understand solving techniques
-- **Difficulty Levels**: Puzzles for beginners to experts
-- **Progress Tracking**: Statistics to monitor improvement
-- **Mobile Friendly**: Use anywhere, anytime
-
-### For Developers
-- **Clean Architecture**: Well-structured, maintainable codebase
-- **Comprehensive API**: Full REST API for integration
-- **Database Ready**: Persistent storage with migration support
-- **Scalable Design**: Ready for cloud deployment
-- **Documentation**: Complete API documentation and examples
-
-### For Businesses
-- **White Label Ready**: Easy to rebrand and customize
-- **Analytics Dashboard**: User engagement metrics
-- **Export Functionality**: Data portability
-- **Performance Optimized**: Fast loading and solving
-- **Cross-Platform**: Web-based, works everywhere
-
-## 🚀 Deployment
-
-### Backend Deployment
+### Using Windows Batch Script
 ```bash
-# Build JAR file
+# Run both backend and frontend
+run.bat
+```
+
+### Using Docker
+```bash
+# Build and run with Docker Compose
+docker-compose -f docker-compose.java.yml up --build
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+
+### Scraping
+- `GET /api/websites` - Get available websites
+- `POST /api/scraping-jobs` - Create new scraping job
+- `GET /api/scraping-jobs` - List user's jobs
+- `GET /api/scraping-jobs/{id}` - Get specific job details
+
+### Data Management
+- `GET /api/products` - Get scraped products
+- `GET /api/export/{format}` - Export data (CSV/JSON/Excel)
+- `GET /api/dashboard/stats` - Dashboard statistics
+
+## Architecture
+
+### Backend (Spring Boot)
+- **Models**: JPA entities with User, Product, ScrapingJob
+- **Authentication**: JWT tokens with BCrypt password hashing
+- **Scrapers**: Modular scraper architecture with factory pattern
+- **Background Tasks**: Async job processing with @Async
+- **Database**: H2 in-memory database for development
+
+### Frontend (React)
+- **Components**: Modular React components with hooks
+- **State Management**: Local state with API integration
+- **UI/UX**: Tailwind CSS for responsive design
+- **Data Visualization**: Recharts for analytics
+
+### Database Schema
+```sql
+Users: id, username, email, password, active, created_at
+Products: id, name, price, rating, reviews_count, image_url, product_url, description, category, brand, availability, website, scraped_at, job_id
+ScrapingJobs: id, name, website, search_query, status, total_products, scraped_products, created_at, completed_at, error_message, user_id
+```
+
+## Technology Stack
+
+### Backend
+- **Java 17** - Programming language
+- **Spring Boot 3.2** - Application framework
+- **Spring Security** - Authentication and authorization
+- **Spring Data JPA** - Data persistence
+- **H2 Database** - In-memory database
+- **Selenium WebDriver** - Web scraping
+- **JSoup** - HTML parsing
+- **JWT** - Token-based authentication
+- **Apache POI** - Excel export
+- **OpenCSV** - CSV export
+
+### Frontend
+- **React 18** - UI framework
+- **Axios** - HTTP client
+- **Tailwind CSS** - Styling
+- **Recharts** - Data visualization
+
+## Configuration
+
+### Application Properties
+```yaml
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/ecommerce_scraper
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+
+jwt:
+  secret: your-secret-key-change-in-production
+  expiration: 86400000
+```
+
+## Usage Examples
+
+### Creating a Scraping Job
+1. Login to the application
+2. Navigate to "New Job" tab
+3. Enter job name, select website, and search query
+4. Click "Start Scraping"
+5. Monitor progress in Dashboard
+
+### Exporting Data
+1. Go to "Products" tab
+2. Select export format (CSV, JSON, Excel)
+3. Click export button
+4. File downloads automatically
+
+## Development
+
+### Running Tests
+```bash
+mvn test
+```
+
+### Building for Production
+```bash
 mvn clean package
-
-# Run in production
-java -jar target/sudoku-solver-1.0.0.jar
+java -jar target/scraper-1.0.0.jar
 ```
 
-### Frontend Deployment
+### Adding New Scrapers
+1. Extend `BaseScraper` class
+2. Implement `scrapeProducts()` and `parseProduct()` methods
+3. Register in `ScraperFactory`
+
+## Deployment
+
+### Production Checklist
+- [ ] Change JWT secret in production
+- [ ] Use PostgreSQL instead of H2
+- [ ] Configure proper logging
+- [ ] Set up reverse proxy (Nginx)
+- [ ] Set up SSL certificates
+- [ ] Configure monitoring
+
+### Docker Deployment
 ```bash
-# Build for production
-npm run build
-
-# Serve static files (use any web server)
-# Files will be in the 'build' directory
+# Production deployment
+docker-compose -f docker-compose.java.yml up -d
 ```
 
-## 📈 Performance Metrics
+## Legal Considerations
+- Respect robots.txt files
+- Implement rate limiting
+- Follow website terms of service
+- Use scraped data responsibly
 
-- **Solve Time**: Most puzzles solved in < 50ms
-- **Algorithm Efficiency**: Backtracking with optimizations
-- **Memory Usage**: Minimal memory footprint
-- **Scalability**: Handles concurrent requests efficiently
-
-## 🔮 Future Enhancements
-
-- **User Authentication**: Personal accounts and saved puzzles
-- **Multiplayer Mode**: Competitive solving
-- **Advanced Algorithms**: Implement more solving techniques
-- **Mobile Apps**: Native iOS and Android applications
-- **AI Integration**: Machine learning for puzzle difficulty assessment
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
+## Contributing
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create feature branch
+3. Add tests for new functionality
+4. Submit pull request
 
-## 📞 Support
-
-For support, email support@sudokusolverpro.com or create an issue in the repository.
-
----
-
-**Built with ❤️ for Sudoku enthusiasts and algorithm lovers**
+## License
+MIT License - see LICENSE file for details
